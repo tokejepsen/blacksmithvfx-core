@@ -1,5 +1,4 @@
 import pyblish.api
-import ftrack_locations
 
 
 class BlacksmithFtrackExtractSceneComponent(pyblish.api.InstancePlugin):
@@ -19,7 +18,7 @@ class BlacksmithFtrackExtractSceneComponent(pyblish.api.InstancePlugin):
 
             # Get location
             session = instance.context.data["ftrackSession"]
-            location = ftrack_locations.get_new_location(session)
+            location = session.pick_location()
 
             # Add component
             components = instance.data.get("ftrackComponentsList", [])

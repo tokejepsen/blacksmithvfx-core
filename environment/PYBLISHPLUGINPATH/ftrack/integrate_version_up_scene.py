@@ -1,7 +1,7 @@
 import os
 
 import pyblish.api
-import ftrack_template
+from blacksmithvfx_environment import utils
 
 
 class BlacksmithFtrackIntegrateVersionUpScene(pyblish.api.ContextPlugin):
@@ -48,14 +48,12 @@ class BlacksmithFtrackIntegrateVersionUpScene(pyblish.api.ContextPlugin):
 
     def get_expected_path(self, context, host, version):
 
-        task = context.data["ftrackTask"]
-        templates = ftrack_template.discover_templates()
-        padded_version = str(version + 1).zfill(3)
-        path = ftrack_template.format(
-            {"padded_version": padded_version, host: host},
-            templates,
-            entity=task
-        )[0]
+        path = utils.get_work_file(
+            context.data["ftrackSession"],
+            context.data["ftrackTask"],
+            host,
+            version + 1
+        )
 
         # Increase version until its unique on disk
         if os.path.exists(path):

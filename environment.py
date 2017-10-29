@@ -52,10 +52,10 @@ env["HOUDINI_PATH"] = [
     "&"
 ]
 
-# FTRACK_TEMPLATES_PATH
-paths = [os.path.join(root, "environment", "FTRACK_TEMPLATES_PATH")]
-
-env["FTRACK_TEMPLATES_PATH"] = paths
+# LUCIDITY_TEMPLATE_PATH
+env["LUCIDITY_TEMPLATE_PATH"] = [
+    os.path.join(root, "environment", "LUCIDITY_TEMPLATE_PATH")
+]
 
 # FTRACK_CONNECT_PLUGIN_PATH
 env["FTRACK_CONNECT_PLUGIN_PATH"] = [
@@ -77,19 +77,9 @@ env["FTRACK_CONNECT_PLUGIN_PATH"] = [
     ),
 ]
 
-# FTRACK_LOCATION_PLUGIN_PATH
-env["FTRACK_LOCATION_PLUGIN_PATH"] = [
-    os.path.join(root, "environment", "FTRACK_LOCATION_PLUGIN_PATH"),
-]
-
 # FTRACK_EVENT_PLUGIN_PATH
 env["FTRACK_EVENT_PLUGIN_PATH"] = [
     os.path.join(root, "environment", "FTRACK_EVENT_PLUGIN_PATH"),
-]
-
-# FTRACK_LOCATIONS_MODULE
-env["FTRACK_LOCATIONS_MODULE"] = [
-    os.environ.get("FTRACK_LOCATIONS_MODULE", "ftrack_template_disk")
 ]
 
 # Kill existing ftrack_connects

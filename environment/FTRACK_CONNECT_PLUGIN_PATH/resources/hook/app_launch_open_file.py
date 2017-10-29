@@ -6,7 +6,8 @@ import operator
 
 import ftrack
 import ftrack_api
-import ftrack_template
+import lucidity
+from blacksmithvfx_environment import utils
 
 
 def version_get(string, prefix, suffix=None):
@@ -36,19 +37,14 @@ def get_task_data(event):
     if app_id == "nukex":
         app_id = "nuke"
 
-    templates = ftrack_template.discover_templates()
-    work_file, template = ftrack_template.format(
-        {app_id: app_id, "padded_version": "001"}, templates, entity=task
-    )
-    work_area = os.path.dirname(work_file)
-
     # Pyblish
     if app_id == "pyblish":
-        task_area, template = ftrack_template.format(
-            {}, templates, entity=task
-        )
+        task_area, _ = lucidity.format(task, lucidity.discover_templates())
         data["command"].extend(["--path", task_area])
         return data
+
+    work_file = utils.get_work_file(session, task, app_id, 1)
+    work_area = os.path.dirname(work_file)
 
     # Finding existing work files
     if os.path.exists(work_area):
@@ -88,9 +84,12 @@ def get_task_data(event):
                         location = session.query(
                             "Location where id is \"{0}\"".format(location_id)
                         ).one()
-                        publish_file = location.get_resource_identifier(
-                            component
-                        )
+                        try:
+                            publish_file = location.get_resource_identifier(
+                                component
+                            )
+                        except:
+                            pass
 
                 if publish_file:
                     break
@@ -171,11 +170,7 @@ def get_task_data(event):
 
         if version > int(version_get(work_file, "v")[1]):
 
-            new_work_file = ftrack_template.format(
-                {app_id: app_id, "padded_version": str(version).zfill(3)},
-                templates,
-                entity=task
-            )[0]
+            new_work_file = utils.get_work_file(session, task, app_id, version)
 
             shutil.copy(work_file, new_work_file)
             work_file = new_work_file
